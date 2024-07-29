@@ -26,7 +26,7 @@ export function SideBarContent() {
     "Расписание",
     "Блокнот",
     "Добавить цель",
-    "Цели",
+    "Целиdddd",
   ];
   const sideBarData2 = ["Mail", "Корзина", "Спам"];
 
