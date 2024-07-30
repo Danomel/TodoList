@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -15,7 +14,6 @@ import {
 } from "@mui/material";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import logo from "../assets/logo.png";
 export function SideBarContent() {
   const SpecialListItemButton = styled(ListItemButton)({
     backgroundColor: "lightblue", // Здесь задаём особенный цвет
@@ -26,7 +24,7 @@ export function SideBarContent() {
     "Расписание",
     "Блокнот",
     "Добавить цель",
-    "Целиdddd",
+    "Цели",
   ];
   const sideBarData2 = ["Mail", "Корзина", "Спам"];
 
