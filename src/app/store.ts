@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import layoutReducer from "../features/wrap/layoutSlice";
+import scheduleReducer from "../features/ScheduleSlice";
 
 export const store = configureStore({
     reducer: {
-        layout: layoutReducer
+        layout: layoutReducer,
+        schedule: scheduleReducer
     }
 })
 

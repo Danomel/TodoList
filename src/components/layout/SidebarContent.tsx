@@ -20,11 +20,10 @@ export function SideBarContent() {
   });
   const sideBarData1 = [
     "Добавить задачу",
+    "Задачи",
     "Сегодня",
     "Расписание",
-    "Блокнот",
-    "Добавить цель",
-    "Цели",
+    "Планы",
   ];
   const sideBarData2 = ["Mail", "Корзина", "Спам"];
 

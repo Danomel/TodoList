@@ -12,7 +12,7 @@ export function SideBar() {
     (state: RootState) => state.layout.isSideBarOpen
   );
   const sideBarWidth = useSelector(
-    (state: RootState) => state.layout.sidebarWidth
+    (state: RootState) => state.layout.sideBarWidth
   );
   const dispatch: AppDispatch = useDispatch();
   return (

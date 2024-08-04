@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 export interface layoutState {
-    sidebarWidth: number,
+    sideBarWidth: number,
+    appBarHeight: {xs: number, sm: number}
     isSideBarOpen: boolean,
     isSideBarClosing: boolean,
 }
@@ -9,7 +10,8 @@ export interface layoutState {
 const initialState: layoutState = {
     isSideBarClosing: false,
     isSideBarOpen: false,
-    sidebarWidth: 300
+    sideBarWidth: 300,
+    appBarHeight: {xs: 56, sm: 64}
 }
 
 export const layoutSlice = createSlice({
@@ -26,7 +28,7 @@ export const layoutSlice = createSlice({
             state.isSideBarOpen = false
         },
         handleSideBarTransitionEnd: (state) => {
-            state.isSideBarOpen = true
+            state.isSideBarClosing = false;
         }
     }
 })
