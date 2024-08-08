@@ -2,14 +2,15 @@ import styled from "@emotion/styled";
 import { Box, Button, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { Field, Form, Formik } from "formik";
-import { AppDispatch } from "../../../app/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../app/store";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addContent,
-  setIsContentModalOpen,
+  setIsContentAddModalOpen,
 } from "../../../features/ScheduleSlice";
+import { useEffect, useState } from "react";
 
 const CustomTimePicker = styled(TimePicker)(() => ({
   ".MuiInputAdornment-root": {
@@ -17,12 +18,39 @@ const CustomTimePicker = styled(TimePicker)(() => ({
   },
 }));
 
-export function ScheduleAddForm(props: { index: number }) {
-  const initialValues = {
+type initialValuesType = {
+  text: string;
+  startTime: Dayjs;
+  endTime: Dayjs;
+};
+
+export function ScheduleAddForm({
+  index,
+  selectedContentIndex,
+}: {
+  index: number | null;
+  selectedContentIndex: number | null;
+}) {
+  const data = useSelector((state: RootState) =>
+    selectedContentIndex !== undefined && selectedContentIndex !== null
+      ? state.schedule.week[index!].content[selectedContentIndex]
+      : null
+  );
+  const [initialValues, setInitialValues] = useState<initialValuesType>({
     startTime: dayjs(),
     endTime: dayjs().add(1, "hour"),
     text: "",
-  };
+  });
+  useEffect(() => {
+    if (data !== null) {
+      setInitialValues({
+        startTime: dayjs(data?.startTime, "HH:mm"),
+        endTime: dayjs(data?.endTime, "HH:mm"),
+        text: "",
+      });
+    }
+  }, [data]);
+
   const dispatch: AppDispatch = useDispatch();
   const submit = (values: typeof initialValues) => {
     const formattedValues = {
@@ -30,11 +58,22 @@ export function ScheduleAddForm(props: { index: number }) {
       startTime: values.startTime.format("HH:mm"),
       endTime: values.endTime.format("HH:mm"),
     };
-    dispatch(addContent({ index: props.index, values: formattedValues }));
-    dispatch(setIsContentModalOpen(false));
+
+    dispatch(
+      addContent({
+        index: index,
+        values: formattedValues,
+        contentIndex: selectedContentIndex,
+      })
+    );
+    dispatch(setIsContentAddModalOpen(false));
   };
   return (
-    <Formik initialValues={initialValues} onSubmit={(values) => submit(values)}>
+    <Formik
+      enableReinitialize
+      initialValues={initialValues}
+      onSubmit={(values) => submit(values)}
+    >
       {({ setFieldValue, values, handleReset }) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Form>

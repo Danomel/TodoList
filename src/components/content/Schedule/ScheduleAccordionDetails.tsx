@@ -8,19 +8,21 @@ import {
 import { Content, deleteContent } from "../../../features/ScheduleSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../app/store";
 
 interface ScheduleAccordionDetailsProps {
   contentIndex: number;
   content: Content;
   index: number;
+  handleToggleIsContentAddModal: (index: number, contentIndex: number) => void;
 }
 
 export function ScheduleAccordionDetails({
   contentIndex,
   content,
   index,
+  handleToggleIsContentAddModal,
 }: ScheduleAccordionDetailsProps) {
   const dispatch: AppDispatch = useDispatch();
   return (
@@ -58,6 +60,9 @@ export function ScheduleAccordionDetails({
           <Box sx={{ flexShrink: 1, display: "flex" }}>
             <Box>
               <IconButton
+                onClick={() =>
+                  handleToggleIsContentAddModal(index, contentIndex)
+                }
                 sx={{
                   color: "#757575",
                   ":hover": {

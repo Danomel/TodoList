@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Dayjs } from "dayjs";
 
 export type scheduleState = typeof initialState
 export type Content = {
@@ -7,8 +8,9 @@ export type Content = {
   endTime: string;
 };
 export type AddContentPayload = {
-  index: number;
+  index: number | null;
   values: Content;
+  contentIndex?: null | number
 };
 export const initialState = {
   week: [
@@ -16,15 +18,21 @@ export const initialState = {
       day: "Понедельник",
       content: [
         {
-          text: "asdasd",
-          startTime: "14:88",
+          text: "первый",
+          startTime: "14:11",
           endTime: "13:37",
         },
         {
-          text: "asdasd",
-          startTime: "14:88",
+          text: "второй",
+          startTime: "14:12",
           endTime: "13:37",
         },
+        {
+          text: "третии",
+          startTime: "14:13",
+          endTime: "13:37",
+        },
+        
       ],
     },
     {
@@ -51,8 +59,16 @@ export const initialState = {
       day: "Воскресенье",
       content: [],
     },
+    {
+      day: "Павел",
+      content: [],
+    },
+    {
+      day: "Вера",
+      content: [],
+    },
   ],
-  isContentModalOpen: false
+  isContentAddModalOpen: false,
 };
 
 export const scheduleSlice = createSlice({
@@ -60,26 +76,29 @@ export const scheduleSlice = createSlice({
     initialState,
     reducers: {
       addContent: (state, action: {payload: AddContentPayload}) => {
-        const {index, values} = action.payload;
-        if(index >= 0 && index < state.week.length) {
-          state.week[index].content.push(values)
+        const {index, values, contentIndex = null} = action.payload;
+        if(index !== null && index >= 0 && index < state.week.length) {
+          if(contentIndex !== null && contentIndex >= 0 && contentIndex < state.week[index].content.length){
+            state.week[index].content[contentIndex] = values
+          }
+          else {
+            state.week[index].content.push(values)
+          }
         }
       },
       deleteContent: (state, action) => {
         const {index, contentIndex} = action.payload;
-        
         if(index >= 0 && index < state.week.length) {
           if(contentIndex >= 0 && contentIndex < state.week[index].content.length){
             state.week[index].content.splice(contentIndex, 1);
-            console.log(state.week[index])
           }
         }
       },
-      setIsContentModalOpen: (state, action) => {
-        state.isContentModalOpen = action.payload
-      }
+      setIsContentAddModalOpen: (state, action) => {
+        state.isContentAddModalOpen = action.payload
+      },
     }
 });
 
-export const { addContent, setIsContentModalOpen, deleteContent } = scheduleSlice.actions;
+export const { addContent, setIsContentAddModalOpen, deleteContent } = scheduleSlice.actions;
 export default scheduleSlice.reducer;
