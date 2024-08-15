@@ -1,13 +1,13 @@
 import { Box, Modal, Typography } from "@mui/material";
-import { RootState } from "../../../app/store";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../app/store";
+import { useDispatch, useSelector } from "react-redux";
 import { ScheduleAddForm } from "./ScheduleAddForm";
 import { FC, memo } from "react";
+import { TargetType } from "./ScheduleComponent";
+import { handleToggleIsContentAddModal } from "../../../features/ScheduleSlice";
 
 export interface ScheduleAddContentModalProps {
-  handleToggleIsContentAddModal: (index: number | null) => void;
-  selectedIndex: number | null;
-  selectedContentIndex: number | null;
+  target: TargetType | null;
 }
 
 const style = {
@@ -23,7 +23,8 @@ const style = {
 };
 
 export const ScheduleAddContentModal: FC<ScheduleAddContentModalProps> = memo(
-  ({ handleToggleIsContentAddModal, selectedIndex, selectedContentIndex }) => {
+  ({ target }) => {
+    const dispatch: AppDispatch = useDispatch();
     const isContentAddModalOpen = useSelector(
       (state: RootState) => state.schedule.isContentAddModalOpen
     );
@@ -31,7 +32,7 @@ export const ScheduleAddContentModal: FC<ScheduleAddContentModalProps> = memo(
     return (
       <Modal
         open={isContentAddModalOpen}
-        onClose={() => handleToggleIsContentAddModal(null)}
+        onClose={() => dispatch(handleToggleIsContentAddModal())}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         slotProps={{
@@ -47,10 +48,7 @@ export const ScheduleAddContentModal: FC<ScheduleAddContentModalProps> = memo(
             <Typography variant="h6">Добавить задачу</Typography>
           </Box>
           <Box sx={{ mt: "30px" }}>
-            <ScheduleAddForm
-              index={selectedIndex}
-              selectedContentIndex={selectedContentIndex}
-            />
+            <ScheduleAddForm target={target} />
           </Box>
         </Box>
       </Modal>

@@ -11,6 +11,7 @@ import {
   setIsContentAddModalOpen,
 } from "../../../features/ScheduleSlice";
 import { useEffect, useState } from "react";
+import { TargetType } from "./ScheduleComponent";
 
 const CustomTimePicker = styled(TimePicker)(() => ({
   ".MuiInputAdornment-root": {
@@ -24,25 +25,28 @@ type initialValuesType = {
   endTime: Dayjs;
 };
 
-export function ScheduleAddForm({
-  index,
-  selectedContentIndex,
-}: {
-  index: number | null;
-  selectedContentIndex: number | null;
-}) {
-  const data = useSelector((state: RootState) =>
-    selectedContentIndex !== undefined && selectedContentIndex !== null
-      ? state.schedule.week[index!].content[selectedContentIndex]
-      : null
-  );
+interface Props {
+  target: TargetType | null;
+}
+
+export function ScheduleAddForm({ target }: Props) {
   const [initialValues, setInitialValues] = useState<initialValuesType>({
     startTime: dayjs(),
     endTime: dayjs().add(1, "hour"),
     text: "",
   });
+  const data = useSelector((state: RootState) => {
+    const dayIndex = state.schedule.week.findIndex(
+      (item) => item.day === target?.day
+    );
+    const contentIndex = state.schedule.week[dayIndex].content.findIndex(
+      (item) => item.id === target?.contentId
+    );
+    const data = state.schedule.week[dayIndex].content[contentIndex];
+    return data;
+  });
   useEffect(() => {
-    if (data !== null) {
+    if (data !== undefined) {
       setInitialValues({
         startTime: dayjs(data?.startTime, "HH:mm"),
         endTime: dayjs(data?.endTime, "HH:mm"),
@@ -58,12 +62,11 @@ export function ScheduleAddForm({
       startTime: values.startTime.format("HH:mm"),
       endTime: values.endTime.format("HH:mm"),
     };
-
     dispatch(
       addContent({
-        index: index,
+        day: target?.day,
         values: formattedValues,
-        contentIndex: selectedContentIndex,
+        contentId: target?.contentId,
       })
     );
     dispatch(setIsContentAddModalOpen(false));

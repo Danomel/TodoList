@@ -1,33 +1,39 @@
 import {
   AccordionDetails,
   Box,
+  Checkbox,
   Divider,
   IconButton,
   Typography,
 } from "@mui/material";
-import { Content, deleteContent } from "../../../features/ScheduleSlice";
+import {
+  Content,
+  deleteContent,
+  handleToggleIsContentAddModal,
+  handleToggleSelectItem,
+} from "../../../features/ScheduleSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../app/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../app/store";
 
 interface ScheduleAccordionDetailsProps {
-  contentIndex: number;
+  day: string;
   content: Content;
-  index: number;
-  handleToggleIsContentAddModal: (index: number, contentIndex: number) => void;
+  isEditMode: boolean;
+  selectedItems: Content[];
 }
 
 export function ScheduleAccordionDetails({
-  contentIndex,
+  day,
   content,
-  index,
-  handleToggleIsContentAddModal,
+  isEditMode,
+  selectedItems,
 }: ScheduleAccordionDetailsProps) {
   const dispatch: AppDispatch = useDispatch();
   return (
     <AccordionDetails sx={{ pb: 0 }}>
-      <Box key={contentIndex} sx={{ display: "flex" }}>
+      <Box key={content.id} sx={{ display: "flex" }}>
         <Box
           sx={{
             width: "100px",
@@ -57,38 +63,57 @@ export function ScheduleAccordionDetails({
           >
             {content.text}
           </Box>
-          <Box sx={{ flexShrink: 1, display: "flex" }}>
-            <Box>
-              <IconButton
-                onClick={() =>
-                  handleToggleIsContentAddModal(index, contentIndex)
-                }
-                sx={{
-                  color: "#757575",
-                  ":hover": {
-                    color: "orange",
-                  },
+          {isEditMode ? (
+            <Box sx={{ mr: 1 }}>
+              <Checkbox
+                checked={selectedItems.some((item) => content.id === item.id)}
+                onChange={() => dispatch(handleToggleSelectItem({ content }))}
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                  event.stopPropagation();
                 }}
-                size="small"
-              >
-                <ModeEditIcon />
-              </IconButton>
+              />
             </Box>
-            <Box>
-              <IconButton
-                onClick={() => dispatch(deleteContent({ index, contentIndex }))}
-                sx={{
-                  color: "#757575",
-                  ":hover": {
-                    color: "red",
-                  },
-                }}
-                size="small"
-              >
-                <DeleteForeverIcon />
-              </IconButton>
+          ) : (
+            <Box sx={{ flexShrink: 1, display: "flex" }}>
+              <Box>
+                <IconButton
+                  onClick={() =>
+                    dispatch(
+                      handleToggleIsContentAddModal({
+                        day,
+                        contentId: content.id,
+                      })
+                    )
+                  }
+                  sx={{
+                    color: "#757575",
+                    ":hover": {
+                      color: "orange",
+                    },
+                  }}
+                  size="small"
+                >
+                  <ModeEditIcon />
+                </IconButton>
+              </Box>
+              <Box>
+                <IconButton
+                  onClick={() =>
+                    dispatch(deleteContent({ day, contentId: content.id }))
+                  }
+                  sx={{
+                    color: "#757575",
+                    ":hover": {
+                      color: "red",
+                    },
+                  }}
+                  size="small"
+                >
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Box>
       <Divider />
