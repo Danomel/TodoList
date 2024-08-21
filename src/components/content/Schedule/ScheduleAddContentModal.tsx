@@ -1,7 +1,7 @@
 import { Box, Modal, Typography } from "@mui/material";
 import { AppDispatch, RootState } from "../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { ScheduleAddForm } from "./ScheduleAddForm";
+import { ScheduleAddForm } from "./ScheduleAddForm/ScheduleAddForm";
 import { FC, memo } from "react";
 import { TargetType } from "./ScheduleComponent";
 import { handleToggleIsContentAddModal } from "../../../features/ScheduleSlice";

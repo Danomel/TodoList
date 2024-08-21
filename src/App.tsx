@@ -2,6 +2,7 @@ import { Box, CssBaseline } from "@mui/material";
 import { HeaderWrap } from "./components/layout/HeaderWrap";
 import { SideBar } from "./components/layout/SideBar";
 import { Content } from "./components/content/Content";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   // todo: В HeaderWrap унести оттуда sideBar сюда, создать новую компоненту в Routes
@@ -9,12 +10,14 @@ function App() {
   // создать конст, с высотой header, унести сюда ширину sidebar
   // 01.08.24 работаю над popup....
   return (
-    <Box>
-      <CssBaseline />
-      <HeaderWrap />
-      <SideBar />
-      <Content />
-    </Box>
+    <BrowserRouter>
+      <Box>
+        <CssBaseline />
+        <HeaderWrap />
+        <SideBar />
+        <Content />
+      </Box>
+    </BrowserRouter>
   );
 }
 

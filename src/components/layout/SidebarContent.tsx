@@ -14,19 +14,20 @@ import {
 } from "@mui/material";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import { useNavigate } from "react-router-dom";
 export function SideBarContent() {
   const SpecialListItemButton = styled(ListItemButton)({
     backgroundColor: "lightblue", // Здесь задаём особенный цвет
   });
   const sideBarData1 = [
-    "Добавить задачу",
-    "Задачи",
-    "Сегодня",
-    "Расписание",
-    "Планы",
+    { name: "Добавить задачу", url: "/" },
+    { name: "Задачи", url: "/tasks" },
+    { name: "Сегодня", url: "/" },
+    { name: "Расписание", url: "/schedule" },
+    { name: "Планы", url: "/" },
   ];
   const sideBarData2 = ["Mail", "Корзина", "Спам"];
-
+  const navigate = useNavigate();
   return (
     <div>
       <Toolbar disableGutters>
@@ -48,19 +49,20 @@ export function SideBarContent() {
       <List>
         {sideBarData1.map((text, index) => (
           <ListItem key={index} disablePadding>
-            {text === "Добавить задачу" || text === "Добавить цель" ? (
-              <SpecialListItemButton>
+            {text.name === "Добавить задачу" ||
+            text.name === "Добавить цель" ? (
+              <SpecialListItemButton onClick={() => navigate(text.url)}>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={text.name} />
               </SpecialListItemButton>
             ) : (
-              <ListItemButton>
+              <ListItemButton onClick={() => navigate(text.url)}>
                 <ListItemIcon>
                   <MailIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={text.name} />
               </ListItemButton>
             )}
           </ListItem>

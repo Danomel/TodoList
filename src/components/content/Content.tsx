@@ -2,6 +2,9 @@ import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { ScheduleComponent } from "./Schedule/ScheduleComponent";
+import { Route, Routes } from "react-router-dom";
+import { Suspense } from "react";
+import { TasksComponent } from "./Tasks/TasksComponent";
 
 export function Content() {
   const appBarHeight = useSelector(
@@ -26,7 +29,12 @@ export function Content() {
         flexGrow: 1,
       }}
     >
-      <ScheduleComponent />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/schedule" element={<ScheduleComponent />}></Route>
+          <Route path="/tasks" element={<TasksComponent />}></Route>
+        </Routes>
+      </Suspense>
     </Box>
   );
 }

@@ -1,17 +1,18 @@
 import styled from "@emotion/styled";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { Field, Form, Formik } from "formik";
-import { AppDispatch, RootState } from "../../../app/store";
+import { AppDispatch, RootState } from "../../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addContent,
   setIsContentAddModalOpen,
-} from "../../../features/ScheduleSlice";
+} from "../../../../features/ScheduleSlice";
 import { useEffect, useState } from "react";
-import { TargetType } from "./ScheduleComponent";
+import { TargetType } from "../ScheduleComponent";
+import { validationSchema } from "./FormValidation";
 
 const CustomTimePicker = styled(TimePicker)(() => ({
   ".MuiInputAdornment-root": {
@@ -76,8 +77,9 @@ export function ScheduleAddForm({ target }: Props) {
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => submit(values)}
+      validationSchema={validationSchema}
     >
-      {({ setFieldValue, values, handleReset }) => (
+      {({ setFieldValue, values, handleReset, touched, errors }) => (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Form>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -109,15 +111,22 @@ export function ScheduleAddForm({ target }: Props) {
               </Box>
               <Field name="text">
                 {() => (
-                  <TextField
-                    id="outlined-basic"
-                    label="Название"
-                    variant="outlined"
-                    value={values.text}
-                    onChange={(e) => {
-                      setFieldValue("text", e.target.value);
-                    }}
-                  />
+                  <div>
+                    <TextField
+                      sx={{ width: "100%" }}
+                      id="outlined-basic"
+                      label="Название"
+                      variant="outlined"
+                      value={values.text}
+                      onChange={(e) => {
+                        setFieldValue("text", e.target.value);
+                      }}
+                      error={touched.text && Boolean(errors.text)}
+                    />
+                    {touched.text && errors.text && (
+                      <FormHelperText error>{errors.text}</FormHelperText>
+                    )}
+                  </div>
                 )}
               </Field>
               <Box sx={{ display: "flex", gap: 2, flexGrow: 1 }}>

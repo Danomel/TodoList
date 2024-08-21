@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Dayjs } from "dayjs";
+import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 
 export type scheduleState = typeof initialState
@@ -75,7 +74,7 @@ const week = [
 ];
 const accordionCount = week.length
 const expandedPanels = Array(accordionCount).fill(false) as boolean[]
-export const initialState = {
+const initialState = {
   week,
   isContentAddModalOpen: false,
   accordionCount,
@@ -175,7 +174,6 @@ export const scheduleSlice = createSlice({
         const {content} = action.payload;
         if (state.selectedItems.some((item) => item.id === content.id)) {
           state.selectedItems = state.selectedItems.filter((item) => item.id !== content.id)
-          
         } else {
           state.selectedItems = [...state.selectedItems, content]
         }
@@ -199,8 +197,9 @@ export const scheduleSlice = createSlice({
       handleSelectedCopyDayAccept: (state) => {
         state.selectedCopyDay.forEach((selectedDay => {
           const weekDay = state.week.findIndex((day) => day.day === selectedDay.day)
-          if(weekDay) {
-            state.week[weekDay].content = [...state.week[weekDay].content, ...state.selectedItems];
+          if(weekDay !== -1) {
+            const newContent = state.selectedItems.map((item) => ({...item, id: uuidv4()}))
+            state.week[weekDay].content = [...state.week[weekDay].content, ...newContent];
           }
         })
       )
